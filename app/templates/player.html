@@ -9,12 +9,15 @@
   <button id="tuner">Tune</button>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
+
     window.onSpotifyWebPlaybackSDKReady = () => {
       const token = "{{ token }}"
       const player = new Spotify.Player({
         name: "Astronaut Radio",
         getOAuthToken: cb => { cb(token); }
       });
+
+  let dev_id
 
   // Error Handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -23,15 +26,22 @@
   player.addListener('playback_error', ({ message }) => { console.error(message); });
 
   // Playback status updates
-  player.addListener('player_state_changed', state => { console.log(state); });
-
-  let dev_id
+  player.addListener('player_state_changed', state => {
+    if(state.paused &&
+       state.position === 0 &&
+       state.restrictions.disallow_resuming_reasons &&
+       state.restrictions.disallow_resuming_reasons[0] === "not_paused") {
+         refreshSong(dev_id)
+       }
+  });
 
   // Ready
   player.addListener('ready', ({ device_id }) => {
     console.log('Ready with Device ID', device_id);
     dev_id = device_id
   });
+
+
 
   // Not Ready
   player.addListener('not_ready', ({ device_id }) => {
@@ -41,25 +51,28 @@
   // Connect to the player!
   player.connect();
 
-  document.getElementById("tuner").addEventListener("click", ()=> {
-    $.post('/refresh', {
-      refresh_key: '{{ refresh }}',
-      device_id: dev_id
-    }).done((response) => {
-      $('#name').text(response['country_name'])
-      $('#code').text(response['cc'])
-      $('#song').text(response['name'])
-      $('#lat').text(response['iss_lat'])
-      $('#long').text(response['iss_long'])
-    }).fail(() => {
-      $('#name').text("Some")
-      $('#code').text("thing")
-      $('#song').text("is")
-      $('#lat').text("bro")
-      $('#long').text("ken")
-    })
+  document.getElementById("tuner").addEventListener("click", () => {
+    refreshSong(dev_id)
   })
 }
 
+function refreshSong(this_device_id) {
+  $.post('/refresh', {
+    refresh_key: '{{ refresh }}',
+    device_id: this_device_id
+  }).done((response) => {
+    $('#name').text(response['country_name'])
+    $('#code').text(response['cc'])
+    $('#song').text(response['name'])
+    $('#lat').text(response['iss_lat'])
+    $('#long').text(response['iss_long'])
+  }).fail(() => {
+    $('#name').text("Some")
+    $('#code').text("thing")
+    $('#song').text("is")
+    $('#lat').text("bro")
+    $('#long').text("ken")
+  })
+}
   </script>
 {% endblock %}
