@@ -8,10 +8,8 @@
     <title>Home</title>
     {% endif %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://www.webglearth.com/v2/api.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
   </head>
-  <body>
-    <div>Links: <a href="/index">Home</a></div>
-    <hr>
     {% block content %}{% endblock %}
-  </body>
 </html>
