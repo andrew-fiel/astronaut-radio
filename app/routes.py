@@ -35,12 +35,11 @@ def index():
         "response_type": "code",
         "redirect_uri": REDIRECT_URI,
         "scope": SCOPE,
-        "client_id": SPOTIFY_CLIENT_ID,
-        "show_dialog": "true"
+        "client_id": SPOTIFY_CLIENT_ID
     }
     url_args = "&".join(["{}={}".format(key, quote(val)) for key, val in auth_query_parameters.items()])
     auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
-    return redirect(auth_url)
+    return render_template("index.html", auth_url=auth_url)
 
 
 @app.route("/callback/q")

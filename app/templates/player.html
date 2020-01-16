@@ -8,11 +8,11 @@
   <p id="lat">Lat:</p>
   <p id="long">Long:</p>
   <button id="tuner">Tune</button>
-  <div id="earth_div"></div>
-
+  <div>
+      <div id="earth_div"><div id="cupola"></div></div>
+  </div>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-
     var earth;
     function initialize() {
       earth = new WE.map('earth_div', {
@@ -29,7 +29,7 @@
     }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = "{{ token }}"
+      const token = "{{ token }}";
       const player = new Spotify.Player({
         name: "Astronaut Radio",
         getOAuthToken: cb => { cb(token); }
@@ -71,28 +71,38 @@
 
   document.getElementById("tuner").addEventListener("click", () => {
     refreshSong(dev_id)
-  })
-}
+    })
+  }
 
-function refreshSong(this_device_id) {
-  $.post('/refresh', {
-    refresh_key: '{{ refresh }}',
-    device_id: this_device_id
-  }).done((response) => {
-    $('#name').text(response['country_name'])
-    $('#code').text(response['cc'])
-    $('#song').text(response['name'])
-    $('#lat').text(response['iss_lat'])
-    $('#long').text(response['iss_long'])
-    earth.panTo([response['iss_lat'], response['iss_long']])
-  }).fail(() => {
-    $('#name').text("Some")
-    $('#code').text("thing")
-    $('#song').text("is")
-    $('#lat').text("bro")
-    $('#long').text("ken")
-  })
-}
+  function refreshLocation() {
+    $.get("https://api.wheretheiss.at/v1/satellites/25544").done((response) => {
+      earth.setView([response['latitude'], response['longitude']])
+    }).fail(() => {
+    })
+  }
+  refreshLocation();
+  setInterval(refreshLocation, 5*1000);
+
+  function refreshSong(this_device_id) {
+    $.post('/refresh', {
+      refresh_key: "{{ refresh }}",
+      device_id: this_device_id
+    }).done((response) => {
+      $('#name').text(response['country_name'])
+      $('#code').text(response['cc'])
+      $('#song').text(response['name'])
+      $('#lat').text(response['iss_lat'])
+      $('#long').text(response['iss_long'])
+      //earth.panTo([response['iss_lat'], response['iss_long']])
+    }).fail(() => {
+      $('#name').text("Some")
+      $('#code').text("thing")
+      $('#song').text("is")
+      $('#lat').text("bro")
+      $('#long').text("ken")
+    })
+  }
+
   </script>
 </body>
 {% endblock %}

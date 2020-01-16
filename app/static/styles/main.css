@@ -1,0 +1,84 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font: 400 15px/1.8 "Lato", sans-serif;
+  color: #777;
+}
+
+#stars {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  background-image: url("/static/images/stars.jpg");
+  z-index: 1;
+}
+
+#cupola {
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  background-image: url("/static/images/window.png");
+  z-index: 2;
+}
+
+#earth_div {
+  mask-image: url("/static/images/window.png");
+}
+
+#buttonbegin {
+  position: relative;
+  top: 50px;
+}
+
+.buttonarea {
+  display: block;
+  vertical-align: middle;
+}
+
+h2 {
+  display: inline-block;
+  margin: 0;
+}
+
+.logo {
+  vertical-align: middle;
+  padding-bottom: 10px;
+}
+
+a {
+  font-size: 20px;
+  position: absolute;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: white;
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  top: 35%;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+}
+
+.caption span.border {
+  background-color: #fff;
+  color: #000;
+  padding: 18px;
+  font-size: 25px;
+  letter-spacing: 10px;
+}
+
+h3 {
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font: 20px "Lato", sans-serif;
+  color: #111;
+}

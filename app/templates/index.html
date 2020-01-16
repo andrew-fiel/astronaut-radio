@@ -1,7 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>Country: {{ country }} (Code: {{ code }}) </p>
-    <p> {{ selected_song_id }} </p>
-    <p> Lat = {{ iss_lat }}, Long = {{ iss_long }} </p>
+<body>
+  <div id="stars">
+    <div class="caption">
+      <span class="border">ASTRONAUT</span><br>
+      <span class="border">RADIO</span>
+
+
+        <div class="buttonarea">
+          <a href="{{ auth_url }}" id="buttonbegin">
+          <div>Log in with <img src="/static/images/spotifylogo.png" alt=" Spotify" class="logo" height="50"></div>
+          </a>
+        </div>
+
+    </div>
+  </div>
+</body>
 {% endblock %}
