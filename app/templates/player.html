@@ -2,14 +2,19 @@
 
 {% block content %}
 <body onload="initialize()">
-  <p id="name">Country:</p>
-  <p id="code">Code:</p>
-  <p id="song">Song:</p>
-  <p id="lat">Lat:</p>
-  <p id="long">Long:</p>
-  <button id="tuner">Tune</button>
-  <div>
-      <div id="earth_div"><div id="cupola"></div></div>
+
+  <div id = "container">
+    <div id="earth_div">
+      <div id="cupola">
+        <img src="/static/images/window.png" alt="" id="overlay">
+      </div>
+      <h2 id="name">Country:</h2><br>
+      <h2 id="code">Code:</h2><br>
+      <h2 id="song">Song:</h2><br>
+      <h2 id="lat">Lat:</h2><br>
+      <h2 id="long">Long:</h2><br>
+      <button id="tuner">Tune</button>
+    </div>
   </div>
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
