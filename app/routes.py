@@ -13,8 +13,7 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-CLIENT_SIDE_URL = "http://astronaut-radio.herokuapp.com"
-REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
+REDIRECT_URI = "https://astronaut-radio.herokuapp.com/callback/q"
 SCOPE = "user-modify-playback-state streaming user-read-email user-read-private"
 
 
@@ -23,7 +22,7 @@ SCOPE = "user-modify-playback-state streaming user-read-email user-read-private"
 def index():
     auth_query_parameters = {
         "response_type": "code",
-        "redirect_uri": "https://astronaut-radio.herokuapp.com/callback/q",
+        "redirect_uri": REDIRECT_URI,
         "scope": "user-modify-playback-state streaming user-read-email user-read-private",
         "client_id": app.config['SPOTIFY_CLIENT_ID']
     }
