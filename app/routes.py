@@ -18,9 +18,8 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-CLIENT_SIDE_URL = "http://127.0.0.1"
-PORT = 5000
-REDIRECT_URI = "{}:{}/callback/q".format(CLIENT_SIDE_URL, PORT)
+CLIENT_SIDE_URL = "http://astronaut-radio.herokuapp.com"
+REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
 SCOPE = "user-modify-playback-state streaming user-read-email user-read-private"
 
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
@@ -33,9 +32,9 @@ country_data = json.load(open(json_url))
 def index():
     auth_query_parameters = {
         "response_type": "code",
-        "redirect_uri": REDIRECT_URI,
-        "scope": SCOPE,
-        "client_id": SPOTIFY_CLIENT_ID
+        "redirect_uri": "http://astronaut-radio.herokuapp.com/callback/q",
+        "scope": "user-modify-playback-state streaming user-read-email user-read-private",
+        "client_id": app.config['SPOTIFY_CLIENT_ID']
     }
     url_args = "&".join(["{}={}".format(key, quote(val)) for key, val in auth_query_parameters.items()])
     auth_url = "{}/?{}".format(SPOTIFY_AUTH_URL, url_args)
