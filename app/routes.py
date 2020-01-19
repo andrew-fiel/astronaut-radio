@@ -1,14 +1,9 @@
 import json
-from flask import render_template, redirect, request, jsonify
+from flask import render_template, request, jsonify
 import requests
 from app import app
 from urllib.parse import quote
 from app.update import tuneIn
-import os
-
-# spotify api keys
-SPOTIFY_CLIENT_ID = app.config['SPOTIFY_CLIENT_ID']
-SPOTIFY_SECRET = app.config['SPOTIFY_SECRET']
 
 # Spotify URLS
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -22,17 +17,13 @@ CLIENT_SIDE_URL = "http://astronaut-radio.herokuapp.com"
 REDIRECT_URI = "{}/callback/q".format(CLIENT_SIDE_URL)
 SCOPE = "user-modify-playback-state streaming user-read-email user-read-private"
 
-SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-json_url = os.path.join(SITE_ROOT, 'data', 'country_data.json')
-country_data = json.load(open(json_url))
-
 
 @app.route('/')
 @app.route('/index')
 def index():
     auth_query_parameters = {
         "response_type": "code",
-        "redirect_uri": "http://astronaut-radio.herokuapp.com/callback/q",
+        "redirect_uri": "https://astronaut-radio.herokuapp.com/callback/q",
         "scope": "user-modify-playback-state streaming user-read-email user-read-private",
         "client_id": app.config['SPOTIFY_CLIENT_ID']
     }
@@ -49,8 +40,8 @@ def callback():
         "grant_type": "authorization_code",
         "code": str(auth_token),
         "redirect_uri": REDIRECT_URI,
-        'client_id': SPOTIFY_CLIENT_ID,
-        'client_secret': SPOTIFY_SECRET,
+        'client_id': app.config['SPOTIFY_CLIENT_ID'],
+        'client_secret': app.config['SPOTIFY_SECRET'],
     }
     post_request = requests.post(SPOTIFY_TOKEN_URL, data=code_payload)
 
