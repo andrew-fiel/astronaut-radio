@@ -10,3 +10,4 @@ class Config(object):
     SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
     SPOTIFY_SECRET = os.environ.get('SPOTIFY_SECRET')
     MAPQUEST_KEY = os.environ.get('MAPQUEST_KEY')
+    LOCAL_FOR_DEV = os.environ.get('LOCAL_FOR_DEV') or "False"

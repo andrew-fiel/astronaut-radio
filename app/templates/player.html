@@ -4,20 +4,60 @@
 <body onload="initialize()">
   <script src="https://www.webglearth.com/v2/api.js"></script>
   <div id = "container">
-    <div id="earth_div">
-      <div id="cupola">
-        <img src="/static/images/window.png" alt="" id="overlay">
+    <div class="header">
+      <i class="fab fa-github github"></i>
+      <i class="fab fa-linkedin linkedin"></i>
+    </div>
+    <div class="song-wrapper">
+      <div class="song-thumb-wrapper">
+        <div class="song-thumb">
+          <!-- <div id="square_div"> -->
+            <!-- <div id="content"> -->
+              <div id="earth_div">
+                <div id="cupola">
+                  <img src="/static/images/window.png" alt="" id="overlay">
+                </div>
+              </div>
+            <!-- </div> -->
+          <!-- </div> -->
+        </div>
       </div>
-      <h2 id="name">Country:</h2><br>
-      <h2 id="code">Code:</h2><br>
-      <h2 id="song">Song:</h2><br>
-      <h2 id="lat">Lat:</h2><br>
-      <h2 id="long">Long:</h2><br>
-      <button id="tuner">Tune</button>
+
+      <div class="song-info">
+        <h2 id="name">Country:</h2><br>
+        <h2 id="code">Code:</h2><br>
+        <h2 id="song">Song:</h2><br>
+        <h2 id="artist">Artist:</h2><br>
+        <h2 id="lat">Lat:</h2><br>
+        <h2 id="long">Long:</h2><br>
+        <!-- <button id="tuner">Tune</button> -->
+      </div>
+    </div>
+    <div class="player-wrapper">
+      <i class="fas fa-play-circle player-state-btn" id="tuner"></i>
+    </div>
+    <div class="volume-wrapper">
+      <i class="fas fa-volume-off" style="text-align: right" onclick="setVolume(0)"></i>
+      <div class="volume-rocker">
+        <input type="range" name="volume-slider" id="volume-slider" min="0" max="100" step="10" value="50" onchange="setVolume(event.target.value)">
+        <div id="volume-trail"></div>
+      </div>
+      <i class="fas fa-volume-up" onclick="setVolume(100)"></i>
     </div>
   </div>
+
+
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
+
+    $('.github').on('click', () => {
+      window.open('https://github.com/andrew-fiel', '_blank');
+    })
+    $('.linkedin').on('click', () => {
+      window.open('https://www.linkedin.com/in/andrew-fiel/', '_blank');
+    })
+
+
     var earth;
     function initialize() {
       earth = new WE.map('earth_div', {
@@ -33,14 +73,17 @@
       }).addTo(earth)
     }
 
+let dev_id;
+let token;
+
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = "{{ token }}";
+      token = "{{ token }}";
       const player = new Spotify.Player({
         name: "Astronaut Radio",
         getOAuthToken: cb => { cb(token); }
       });
 
-  let dev_id
+
 
   // Error Handling
   player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -50,12 +93,14 @@
 
   // Playback status updates
   player.addListener('player_state_changed', state => {
-    if(state.paused &&
+
+    // If player playing individually, start next at previous end
+    if (state.paused &&
        state.position === 0 &&
        state.restrictions.disallow_resuming_reasons &&
        state.restrictions.disallow_resuming_reasons[0] === "not_paused") {
-         refreshSong(dev_id)
-       }
+      refreshSong();
+    }
   });
 
   // Ready
@@ -74,10 +119,10 @@
   // Connect to the player!
   player.connect();
 
-  document.getElementById("tuner").addEventListener("click", () => {
-    refreshSong(dev_id)
-    })
-  }
+   document.getElementById("tuner").addEventListener("click", () => {
+     refreshSong();
+     })
+   }
 
   function refreshLocation() {
     $.get("https://api.wheretheiss.at/v1/satellites/25544").done((response) => {
@@ -88,16 +133,19 @@
   refreshLocation();
   setInterval(refreshLocation, 5*1000);
 
-  function refreshSong(this_device_id) {
+  function refreshSong() {
     $.post('/refresh', {
       refresh_key: "{{ refresh }}",
-      device_id: this_device_id
+      device_id: dev_id
     }).done((response) => {
-      $('#name').text(response['country_name'])
-      $('#code').text(response['cc'])
-      $('#song').text(response['name'])
-      $('#lat').text(response['iss_lat'])
-      $('#long').text(response['iss_long'])
+      $('#name').text("Country: " + response['country_name'])
+      $('#code').text("Code: " + response['cc'])
+      $('#song').text("Song: " + response['name'])
+      $('#lat').text("Lat " + response['iss_lat'])
+      $('#long').text("Long: " + response['iss_long'])
+      token = response['newToken'];
+
+      //move on update instead of constant
       //earth.panTo([response['iss_lat'], response['iss_long']])
     }).fail(() => {
       $('#name').text("Some")
@@ -105,6 +153,20 @@
       $('#song').text("is")
       $('#lat').text("bro")
       $('#long').text("ken")
+    })
+  }
+
+  function setVolume( newVolume ) {
+    $('#volume-trail').css('width', newVolume+"%");
+    $('#volume-slider').value = newVolume;
+    $.post('/volume', {
+      auth: token,
+      device_id: dev_id,
+      new_volume: newVolume
+    }).done((response) => {
+
+    }).fail(() => {
+
     })
   }
 

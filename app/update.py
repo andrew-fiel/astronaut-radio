@@ -93,7 +93,8 @@ def tuneIn(spotify_refresh, device_id):
     display_name = songs_data['items'][songIndex]['track']['name']
 
     uri_data = {
-        "uris": display_uri
+        "uris": display_uri,
+        "position_ms": 1
     }
 
     # play the song
@@ -113,6 +114,7 @@ def tuneIn(spotify_refresh, device_id):
         'cc': country_code,
         'country_name': country_name,
         'iss_lat': iss_lat,
-        'iss_long': iss_long
+        'iss_long': iss_long,
+        'newToken': access_token
     }
     return playstate

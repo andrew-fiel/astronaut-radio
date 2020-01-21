@@ -4,6 +4,7 @@ import requests
 from app import app
 from urllib.parse import quote
 from app.update import tuneIn
+from app.volume import changeVolume
 
 # Spotify URLS
 SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
@@ -14,6 +15,10 @@ SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
 REDIRECT_URI = "https://astronaut-radio.herokuapp.com/callback/q"
+
+if app.config['LOCAL_FOR_DEV'] == "True":
+    REDIRECT_URI = "http://127.0.0.1:5000/callback/q"
+
 SCOPE = "user-modify-playback-state streaming user-read-email user-read-private"
 
 
@@ -61,5 +66,16 @@ def refresh_and_tune():
                     'cc': dict['cc'],
                    'country_name': dict['country_name'],
                     'iss_lat': dict['iss_lat'],
-                    'iss_long': dict['iss_long']
+                    'iss_long': dict['iss_long'],
+                    'newToken': dict['newToken']
                     })
+
+
+@app.route("/volume", methods=['POST'])
+def setVolume():
+    resp = changeVolume(request.form['auth'],
+                        request.form['device_id'],
+                        request.form['new_volume'])
+    return jsonify({
+        'success': resp['success']
+    })
