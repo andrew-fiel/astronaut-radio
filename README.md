@@ -4,7 +4,7 @@ Web app with a flask backend that uses [positioning data](https://wheretheiss.at
 
 [Hosted here](https://astronaut-radio.herokuapp.com/)
 
-[Source for most of front end](https://codepen.io/moosasaadat/pen/WNNNaGo)
+[Source for most of main page front end](https://codepen.io/moosasaadat/pen/WNNNaGo)
 
 [Source for some of authentication process](https://github.com/drshrey/spotify-flask-auth-example/blob/master/main.py)
 
