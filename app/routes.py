@@ -63,6 +63,7 @@ def callback():
 def refresh_and_tune():
     dict = tuneIn(request.form['refresh_key'], request.form['device_id'])
     return jsonify({'name': dict['name'],
+                    'artist': dict['artist'],
                     'cc': dict['cc'],
                    'country_name': dict['country_name'],
                     'iss_lat': dict['iss_lat'],

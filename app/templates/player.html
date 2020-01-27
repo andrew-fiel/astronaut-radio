@@ -139,6 +139,7 @@ let token;
       device_id: dev_id
     }).done((response) => {
       $('#name').text("Country: " + response['country_name'])
+      $('#artist').text("Artist: " + response['artist'])
       $('#code').text("Code: " + response['cc'])
       $('#song').text("Song: " + response['name'])
       $('#lat').text("Lat " + response['iss_lat'])

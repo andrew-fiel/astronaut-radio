@@ -40,10 +40,12 @@ def tuneIn(spotify_refresh, device_id):
     country_code = map_data['results'][0]['locations'][0]['adminArea1']
 
     # convert code to name of playlist spotify has
-    if country_code in country_data and country_data[country_code][0] != '*':
-        country_name = country_data[country_code]
+    if country_code in country_data:
+        country_name = country_data[country_code][0]
+        country_search = country_data[country_code][1]
     else:
-        country_name = "Global"
+        country_name = "Unknown"
+        country_search = "Global%20Viral%2050"
 
     # --------- Find playlist --------------------------------
 
@@ -67,12 +69,15 @@ def tuneIn(spotify_refresh, device_id):
     access_token = refresh_data['access_token']
     authorization_header = {"Authorization": "Bearer {}".format(access_token)}
 
-    if country_name == "XZ":
-        playlist_api_endpoint = "{}/search?q=Ocean&type=playlist&limit=1".format(SPOTIFY_API_URL)
-    else:
-        playlist_api_endpoint = "{}/search?q={}%20Viral%2050&type=playlist&limit=1".format(SPOTIFY_API_URL,
-                                                                                           country_name)
+    playlist_api_endpoint = "{}/search?q={}&type=playlist&limit=1".format(SPOTIFY_API_URL,
+                                                                          country_search)
     playlist_response = requests.get(playlist_api_endpoint, headers=authorization_header)
+
+    # if first response is bad, try global
+    if playlist_response.status_code // 100 != 2:
+        playlist_api_endpoint = "{}/search?q=Global%20Viral%2050&type=playlist&limit=1".format(SPOTIFY_API_URL)
+        playlist_response = requests.get(playlist_api_endpoint, headers=authorization_header)
+
     playlist_data = json.loads(playlist_response.text)
 
     # get song from playlist
@@ -91,6 +96,7 @@ def tuneIn(spotify_refresh, device_id):
     # display selected song
     display_uri = [songs_data['items'][songIndex]['track']['uri']]
     display_name = songs_data['items'][songIndex]['track']['name']
+    artist_name = songs_data['items'][songIndex]['track']['artists'][0]['name']
 
     uri_data = {
         "uris": display_uri,
@@ -111,6 +117,7 @@ def tuneIn(spotify_refresh, device_id):
 
     playstate = {
         'name': display_name,
+        'artist': artist_name,
         'cc': country_code,
         'country_name': country_name,
         'iss_lat': iss_lat,
