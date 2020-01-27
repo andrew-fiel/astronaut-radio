@@ -3,7 +3,9 @@
 Web app with a flask backend that uses [positioning data](https://wheretheiss.at/) for the International Space Station (ISS), the MapQuest API, and the Spotify API to play popular music from countries geographically beneath the ISS. It displays the location on the globe through an overlay of ISS cupola using [WebGL Earth](http://www.webglearth.org/about)
 
 [Hosted here](https://astronaut-radio.herokuapp.com/)
+
 [Source for most of front end](https://codepen.io/moosasaadat/pen/WNNNaGo)
+
 [Source for some of authentication process](https://github.com/drshrey/spotify-flask-auth-example/blob/master/main.py)
 
 ---
